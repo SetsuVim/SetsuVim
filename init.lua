@@ -1,0 +1,122 @@
+vim.loader.enable()
+
+require("config.options")
+require("config.keymaps")
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local uv = vim.uv or vim.loop
+if not uv.fs_stat(lazypath) then
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({
+            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+            { out, "WarningMsg" },
+            { "\nPress any key to exit..." },
+        }, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+    spec = {
+        { import = "plugins.color" },
+        { import = "plugins.required" },
+        { import = "plugins.writting" },
+        { import = "plugins.japanese" },
+        { import = "plugins.ui" },
+        { import = "plugins.file-nav" },
+        { import = "plugins.editor" },
+        { import = "plugins.toy" },
+        { import = "plugins.other" },
+    },
+    defaults = {
+        lazy = true,
+        version = false,
+    },
+    checker = {
+        enabled = true,
+        frequency = 86400,
+    },
+    performance = {
+        cache = {
+            enabled = true,
+        },
+        reset_packpath = true,
+        rtp = {
+            reset = true,
+            disabled_plugins = {
+                "gzip",
+                "man",
+                "matchit",
+                "matchparen",
+                "netrw",
+                "netrwPlugin",
+                "tar",
+                "tarPlugin",
+                "tohtml",
+                "tutor",
+                "zip",
+                "zipPlugin",
+            },
+        },
+    },
+})
+
+
+
+-- :Man ----------------------------------------------------
+vim.api.nvim_create_user_command("Man", function(opts)
+    vim.cmd.runtime("plugin/man.lua")
+    vim.cmd("Man " .. (opts.args or ""))
+end, {
+    nargs = "*",
+    complete = "shellcmd",
+})
+-- netrw (:Explore, :Ex, :Lexplore) ------------------------
+local function run_netrw(cmd, args)
+    vim.cmd.runtime("plugin/netrwPlugin.vim")
+    vim.cmd(cmd .. " " .. (args or ""))
+end
+vim.api.nvim_create_user_command("Explore", function(opts)
+    run_netrw("Explore", opts.args)
+end, { nargs = "?" })
+vim.api.nvim_create_user_command("Ex", function(opts)
+    run_netrw("Ex", opts.args)
+end, { nargs = "?" })
+vim.api.nvim_create_user_command("Lexplore", function(opts)
+    run_netrw("Lexplore", opts.args)
+end, { nargs = "?" })
+-- :TOhtml -------------------------------------------------
+vim.api.nvim_create_user_command("TOhtml", function()
+    vim.cmd.runtime("plugin/tohtml.vim")
+    vim.cmd("TOhtml")
+end, {})
+-- :Tutor --------------------------------------------------
+vim.api.nvim_create_user_command("Tutor", function()
+    vim.cmd.runtime("plugin/tutor.vim")
+    vim.cmd.Tutor()
+end, {})
+-- :zipPlugin ----------------------------------------------
+vim.api.nvim_create_autocmd("BufReadCmd", {
+    pattern = "*.zip",
+    callback = function()
+        vim.cmd.runtime("plugin/zipPlugin.vim")
+    end,
+})
+------------------------------------------------------------
+
+
+local function zenhan_off()
+    vim.system({ "zenhan", "0" }, { detach = true })
+end
+
+if vim.fn.executable("zenhan") == 1 then
+    for _, event in ipairs({ "InsertLeave", "CmdlineLeave" }) do
+        vim.api.nvim_create_autocmd(event, {
+            callback = zenhan_off,
+        })
+    end
+end
