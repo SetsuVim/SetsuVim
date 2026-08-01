@@ -1,65 +1,15 @@
-return{
+return {
     "windwp/nvim-autopairs",
     lazy = true,
     event = "InsertEnter",
     config = function()
         local npairs = require("nvim-autopairs")
-        local Rule = require("nvim-autopairs.rule")
 
         npairs.setup({
-            check_ts = true,
+            check_ts = false,
             fast_wrap = {},
+            map_cr = true,
+            map_bs = true,
         })
-
-        -- 「」
-        npairs.add_rule(
-            Rule("「", "」")
-        )
-
-        -- 『』
-        npairs.add_rule(
-            Rule("『", "』")
-        )
-
-        -- （）
-        npairs.add_rule(
-            Rule("（", "）")
-        )
-
-        -- 【】
-        npairs.add_rule(
-            Rule("【", "】")
-        )
-
-        -- 〈〉
-        npairs.add_rule(
-            Rule("〈", "〉")
-        )
-
-        -- 《》
-        npairs.add_rule(
-            Rule("《", "》")
-        )
-
-        -- 〔〕
-        npairs.add_rule(
-            Rule("〔", "〕")
-        )
-
-        -- ［］
-        npairs.add_rule(
-            Rule("［", "］")
-        )
-
-        -- ｛｝
-        npairs.add_rule(
-            Rule("｛", "｝")
-        )
-
-        -- ＜＞
-        npairs.add_rule(
-            Rule("＜", "＞")
-        )
-
     end,
 }
