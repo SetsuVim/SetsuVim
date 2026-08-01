@@ -1,5 +1,5 @@
 return {
-    "T-b-t-nchos/ss-rubi.nvim",
+    "SetsuVim/sv-rubi.nvim",
     lazy = true,
     cmd = { "RubiInsert", "RubiInsertAC" },
 }
