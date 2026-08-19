@@ -1,5 +1,10 @@
 local vks = vim.keymap.set
 
+-- Esc
+vks({"i", "x", "n", "s"}, "<esc>", function ()
+    vim.cmd("<cmd>noh<cr>")
+    return "<esc>"
+end, { silent = true, desc = "Escape & Clear Highlight" })
 
 -- Buffer
 -- move
