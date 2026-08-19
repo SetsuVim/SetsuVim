@@ -64,13 +64,15 @@ return {
         },
 
         sources = {
-            default = {
-                "lsp",
-                "path",
-                "buffer",
-                "snippets",
-                "emoji",
-            },
+            default = function ()
+                local ft = vim.bo.filetype
+
+                if ft == "text" then
+                    return { "emoji", "path", }
+                end
+
+                return { "lsp", "path", "buffer", "snippets", "emoji", }
+            end,
 
             providers = {
                 emoji = {
