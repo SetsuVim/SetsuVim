@@ -5,5 +5,6 @@ return {
     keys = {
         { "<leader>sr", "<cmd>RubiInsert<CR>", mode = { "n", "v" }, desc = "Insert Rubi" },
         { "<leader>sR", "<cmd>RubiInsertAC<CR>", mode = "v", desc = "Insert Rubi with AutoComplete" },
-    }
+    },
+    opts = {}
 }
