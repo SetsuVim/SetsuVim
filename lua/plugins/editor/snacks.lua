@@ -27,6 +27,36 @@ return {
             end,
             desc = "toggle dark background",
         },
+        {
+            "<leader>up",
+            function()
+                local snacks = require("snacks")
+
+                if not vim.g.transparent_colorscheme then
+                    vim.g.transparent_colorscheme = "default"
+                end
+
+                snacks.toggle.new({
+                    id = "transparent_background",
+                    name = "transparent background",
+
+                    get = function()
+                        return vim.g.transparent_background == true
+                    end,
+
+                    set = function(state)
+                        vim.g.transparent_background = state
+
+                        if state then
+                            vim.cmd("highlight Normal guibg=NONE ctermbg=NONE")
+                        else
+                            vim.cmd("colorscheme " .. vim.g.transparent_colorscheme)
+                        end
+                    end,
+                }):toggle()
+            end,
+            desc = "toggle transparent",
+        },
     },
     opts = {
         bigfile = {
